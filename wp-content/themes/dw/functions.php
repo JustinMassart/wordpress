@@ -54,31 +54,42 @@
 		$locations = get_nav_menu_locations();
 
 		if ( $locations[ $location ] ?? false ) {
-			$menu = $locations[ $location ];
+			$items = [];
+		}
 
-			// Récupérer tous les éléments du menu récupéré
-			$posts = wp_get_nav_menu_items( $menu );
+		// Récupérer le menu Wordpress pour $location
+		$locations = get_nav_menu_locations();
 
-			// Formater chaque élément dans une instance de classe personnalisée
-			// Boucler sur chaque $post
-			foreach ( $posts as $post ) {
-				// Transformer le WP_Post en une instance de notre classe personnalisée
-				$item = new PrimaryMenuItem( $post );
+		if ( ! ( $locations[ $location ] ?? false ) ) {
+			return $items;
+		}
+		$menu = $locations[ $location ];
 
-				// Ajouter cette instance à $items ou à l'item parent si sous-menu
-				if ( $item->isSubItem() ) {
-					// Ajouter $item comme "enfant" de l'item parent.
-					foreach ( $items as $parent ) {
-						if ( $parent->isParentFor( $item ) ) {
-							$parent->addSubItem( $item );
-						}
-					}
-				} else {
-					// Ajouter au tableau d'éléments de niveau 0.
-					$items[] = $item;
+		// Récupérer tous les éléments du menu récupéré
+		$posts = wp_get_nav_menu_items( $menu );
+
+		// Formater chaque élément dans une instance de classe personnalisée
+		// Boucler sur chaque $post
+		foreach ( $posts as $post ) {
+			// Transformer le WP_Post en une instance de notre classe personnalisée
+			$item = new PrimaryMenuItem( $post );
+
+			// Ajouter cette instance à $items ou à l'item parent si sous-menu
+			if ( ! ( $item->isSubItem() ) ) {
+				// Ajouter au tableau d'éléments de niveau 0.
+				$items[] = $item;
+				continue;
+			}
+
+			// Ajouter $item comme "enfant" de l'item parent.
+			foreach ( $items as $parent ) {
+				if ( ! ( $parent->isParentFor( $item ) ) ) {
+					$parent->addSubItem( $item );
+					continue;
 				}
 			}
 		}
+
 
 		// Retourner un tableau d'éléments du menu formatés
 		return $items;
@@ -90,189 +101,147 @@
 		// Récupérer le menu Wordpress pour $location
 		$locations = get_nav_menu_locations();
 
-		if ( $locations[ $location ] ?? false ) {
-			$menu = $locations[ $location ];
+		if ( ! ( $locations[ $location ] ?? false ) ) {
+			return $items;
+		}
+		$menu = $locations[ $location ];
 
-			// Récupérer tous les éléments du menu récupéré
-			$posts = wp_get_nav_menu_items( $menu );
+		// Récupérer tous les éléments du menu récupéré
+		$posts = wp_get_nav_menu_items( $menu );
 
-			// Formater chaque élément dans une instance de classe personnalisée
-			// Boucler sur chaque $post
-			foreach ( $posts as $post ) {
-				// Transformer le WP_Post en une instance de notre classe personnalisée
-				$item = new FooterMenuItem( $post );
+		// Formater chaque élément dans une instance de classe personnalisée
+		// Boucler sur chaque $post
+		foreach ( $posts as $post ) {
+			// Transformer le WP_Post en une instance de notre classe personnalisée
+			$item = new FooterMenuItem( $post );
 
-				// Ajouter cette instance à $items ou à l'item parent si sous-menu
-				if ( $item->isSubItem() ) {
-					// Ajouter $item comme "enfant" de l'item parent.
-					foreach ( $items as $parent ) {
-						if ( $parent->isParentFor( $item ) ) {
-							$parent->addSubItem( $item );
-						}
-					}
-				} else {
-					// Ajouter au tableau d'éléments de niveau 0.
-					$items[] = $item;
+			// Ajouter cette instance à $items ou à l'item parent si sous-menu
+			if ( ! ( $item->isSubItem() ) ) {
+				// Ajouter au tableau d'éléments de niveau 0.
+				$items[] = $item;
+				continue;
+			}
+
+			// Ajouter $item comme "enfant" de l'item parent.
+			foreach ( $items as $parent ) {
+				if ( ! ( $parent->isParentFor( $item ) ) ) {
+					$parent->addSubItem( $item );
+					continue;
 				}
 			}
 		}
 
 		// Retourner un tableau d'éléments du menu formatés
 		return $items;
+
 	}
 
-	/*
-	 * // Gérer l'envoi de formulaire personnalisé
 
-add_action('admin_post_submit_contact_form', 'dw_handle_submit_contact_form');
-
-function dw_handle_submit_contact_form()
-{
-    $nonce = $_POST['_wpnonce'];
-
-    if(! wp_verify_nonce($nonce, 'nonce_submit_contact')) {
-        die('Unauthorized.');
-    }
-
-    $data = dw_sanitize_contact_form_data();
-
-    if($errors = dw_validate_contact_form_data($data)) {
-        // C'est pas OK, on place les erreurs de validation dans la session
-        $_SESSION['contact_form_feedback'] = [
-            'success' => false,
-            'data' => $data,
-            'errors' => $errors,
-        ];
-
-        // On redirige l'utilisateur vers le formulaire pour y afficher le feedback d'erreurs.
-        return wp_safe_redirect($_POST['_wp_http_referer'] . '#contact', 302);
-    }
-
-    // C'est OK.
-
-    $id = wp_insert_post([
-        'post_title' => 'Message de ' . $data['firstname'] . ' ' . $data['lastname'],
-        'post_type' => 'message',
-        'post_content' => $data['message'],
-        'post_status' => 'publish'
-    ]);
-
-    // Générer un email contenant l'URL vers le post en question
-    $feedback = 'Bonjour, Vous avez un nouveau message.<br />';
-    $feedback .= 'Y accéder : ' . get_edit_post_link($id);
-
-    // Envoyer l'email à l'admin
-    wp_mail(get_bloginfo('admin_email'), 'Nouveau message !', $feedback);
-
-    // Ajouter le feedback positif à la session
-    $_SESSION['contact_form_feedback'] = [
-        'success' => true,
-    ];
-
-    return wp_safe_redirect($_POST['_wp_http_referer'] . '#contact', 302);
-}
-
-function dw_sanitize_contact_form_data()
-{
-    return [
-        'firstname' => sanitize_text_field($_POST['firstname']),
-        'lastname' => sanitize_text_field($_POST['lastname']),
-        'email' => sanitize_email($_POST['email']),
-        'phone' => sanitize_text_field($_POST['phone']),
-        'message' => sanitize_text_field($_POST['message'] ?? ''),
-        'rules' => sanitize_text_field($_POST['rules'] ?? ''),
-    ];
-}
-
-function dw_validate_contact_form_data($data)
-{
-    $errors = [];
-
-    $required = ['firstname','lastname','email','message'];
-    $email = ['email'];
-    $accepted = ['rules'];
-
-    foreach($data as $key => $value) {
-        if(in_array($key, $required) && ! $value) {
-            $errors[$key] = 'required';
-            continue;
-        }
-
-        if(in_array($key, $email) && ! filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            $errors[$key] = 'email';
-            continue;
-        }
-
-        if(in_array($key, $accepted) && $value !== '1') {
-            $errors[$key] = 'accepted';
-            continue;
-        }
-    }
-
-    return $errors ?: false;
-}
-
-function dw_get_contact_field_value($field)
-{
-    if(! isset($_SESSION['contact_form_feedback'])) {
-        return '';
-    }
-
-    return $_SESSION['contact_form_feedback']['data'][$field] ?? '';
-}
-
-function dw_get_contact_field_error($field)
-{
-    if(! isset($_SESSION['contact_form_feedback'])) {
-        return '';
-    }
-
-    if(! ($_SESSION['contact_form_feedback']['errors'][$field] ?? null)) {
-        return '';
-    }
-
-    return '<p>Ce champ ne respecte pas : ' . $_SESSION['contact_form_feedback']['errors'][$field] . '</p>';
-	 * */
-
-	// Enregistrer le traitement du formulaire de contact personnalisé
+// Gérer l'envoi de formulaire personnalisé
 
 	add_action( 'admin_post_submit_contact_form', 'dw_handle_submit_contact_form' );
 
 	function dw_handle_submit_contact_form() {
 		$nonce = $_POST['_wpnonce'];
+
 		if ( ! wp_verify_nonce( $nonce, 'nonce_check_contact_form' ) ) {
 			die( 'Unauthorized.' );
 		}
 
-		$firstname = sanitize_text_field( $_POST['firstname'] );
-		$lastname  = sanitize_text_field( $_POST['lastname'] );
-		$email     = sanitize_email( $_POST['email'] );
-		$phone     = sanitize_text_field( $_POST['phone'] );
-		$message   = sanitize_text_field( $_POST['message'] );
+		$data = dw_sanitize_contact_form_data();
 
+		if ( $errors = dw_validate_contact_form_data( $data ) ) {
+			// C'est pas OK, on place les erreurs de validation dans la session
+			$_SESSION['contact_form_feedback'] = [
+				'success' => false,
+				'data'    => $data,
+				'errors'  => $errors,
+			];
 
-		if ( $firstname && $lastname && $email && $message ) {
-			if ( filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
-				if ( ( $_POST['rules'] ?? null ) === '1' ) {
-					$id          = wp_insert_post( [
-						'post_type'    => 'message',
-						'post_title'   => 'Message de ' . $firstname . ' ' . $lastname,
-						'post_content' => $message,
-						'post_status'  => 'publish',
-					] );// Stocker en DB
-					$mailContent = 'Bonjour, un nouveau message de contact a été envoyé.';
-					$mailContent .= 'Pour visionner ce message suivez le lien : ' . get_edit_post_link( $id );
-					wp_mail( 'justin.massart@student.hepl.be', 'Nouveau Message', $mailContent );
-					// Envoyer un mail
-				} else {
-					// Afficher erreur de validation de type checkbox pas cochée
-				}
-			} else {
-				// Afficher erreur de validation de type email incorrect
-			}
-		} else {
-			// Afficher erreur de validation de type required
+			// On redirige l'utilisateur vers le formulaire pour y afficher le feedback d'erreurs.
+			return wp_safe_redirect( $_POST['_wp_http_referer'] . '#contact', 302 );
 		}
+
+		// C'est OK.
+
+		$id = wp_insert_post( [
+			'post_title'   => 'Message de ' . $data['firstname'] . ' ' . $data['lastname'],
+			'post_type'    => 'message',
+			'post_content' => $data['message'],
+			'post_status'  => 'publish'
+		] );
+
+		// Générer un email contenant l'URL vers le post en question
+		$feedback = 'Bonjour, Vous avez un nouveau message.<br />';
+		$feedback .= 'Y accéder : ' . get_edit_post_link( $id );
+
+		// Envoyer l'email à l'admin
+		wp_mail( get_bloginfo( 'admin_email' ), 'Nouveau message !', $feedback );
+
+		// Ajouter le feedback positif à la session
+		$_SESSION['contact_form_feedback'] = [
+			'success' => true,
+		];
+
+		return wp_safe_redirect( $_POST['_wp_http_referer'] . '#contact', 302 );
+	}
+
+	function dw_sanitize_contact_form_data() {
+		return [
+			'firstname' => sanitize_text_field( $_POST['firstname'] ?? null ),
+			'lastname'  => sanitize_text_field( $_POST['lastname'] ?? null ),
+			'email'     => sanitize_email( $_POST[ 'email' ?? null ] ),
+			'phone'     => sanitize_text_field( $_POST['phone'] ?? null ),
+			'message'   => sanitize_text_field( $_POST['message'] ?? null ),
+			'rules'     => sanitize_text_field( $_POST['rules'] ?? null ),
+		];
+	}
+
+	function dw_validate_contact_form_data( $data ) {
+		$errors = [];
+
+		$required = [ 'firstname', 'lastname', 'email', 'message' ];
+		$email    = [ 'email' ];
+		$accepted = [ 'rules' ];
+
+		foreach ( $data as $key => $value ) {
+			if ( in_array( $key, $required ) && ! $value ) {
+				$errors[ $key ] = 'required';
+				continue;
+			}
+
+			if ( in_array( $key, $email ) && ! filter_var( $value, FILTER_VALIDATE_EMAIL ) ) {
+				$errors[ $key ] = 'email';
+				continue;
+			}
+
+			if ( in_array( $key, $accepted ) && $value !== '1' ) {
+				$errors[ $key ] = 'accepted';
+				continue;
+			}
+		}
+
+		return $errors ?: false;
+	}
+
+	function dw_get_contact_field_value( $field ) {
+		if ( ! isset( $_SESSION['contact_form_feedback'] ) ) {
+			return '';
+		}
+
+		return $_SESSION['contact_form_feedback']['data'][ $field ] ?? '';
+	}
+
+	function dw_get_contact_field_error( $field ) {
+		if ( ! isset( $_SESSION['contact_form_feedback'] ) ) {
+			return '';
+		}
+
+		if ( ! ( $_SESSION['contact_form_feedback']['errors'][ $field ] ?? null ) ) {
+			return '';
+		}
+
+		return '<p>Ce champ ne respecte pas : ' . $_SESSION['contact_form_feedback']['errors'][ $field ] . '</p>';
 	}
 
 	register_post_type( 'message', [
