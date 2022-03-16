@@ -33,7 +33,7 @@
 		'supports'      => [ 'title', 'editor', 'thumbnail' ],
 		'rewrite'       => [ 'slug' => 'voyages' ],
 	] );
-	
+
 	register_post_type( 'message', [
 		'label'         => 'Message de contact',
 		'description'   => 'Les messages envoyés par les utilisateurs par le formulaire de contact',
@@ -196,9 +196,8 @@
 		// Générer un email contenant l'URL vers le post en question
 		$feedback = 'Bonjour, Vous avez un nouveau message.<br />';
 		$feedback .= 'Y accéder : ' . get_edit_post_link( $id );
-
 		// Envoyer l'email à l'admin
-		wp_mail( get_bloginfo( 'admin_email' ), 'Nouveau message !', $feedback );
+		wp_mail( 'justinmssrt@gmail.com', 'Nouveau message !', $feedback );
 
 		// Ajouter le feedback positif à la session
 		$_SESSION['contact_form_feedback'] = [

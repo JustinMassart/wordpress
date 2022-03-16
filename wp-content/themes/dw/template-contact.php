@@ -10,7 +10,7 @@
             <form action="<?= get_home_url(); ?>/wp-admin/admin-post.php" method="POST" class="contact__form form"
                   id="contact">
 				<?php if ( isset( $_SESSION['contact_form_feedback'] ) ) : ?>
-                    <p>Oups ! Il y a des erreurs dans le formulaire</p>
+                    <p>Il y a des erreurs dans le formulaire</p>
 				<?php endif; ?>
                 <div class="form__field">
                     <label for="firstname" class="form__label">Votre prénom</label>
