@@ -4,6 +4,15 @@
 	require_once( __DIR__ . '/Menus/PrimaryMenuItem.php' );
 	require_once( __DIR__ . '/Menus/FooterMenuItem.php' );
 
+	// Lancer la sessions PHP pour pouvoir passer des variables de page en page
+	add_action( 'init', 'dw_start_session', 1 );
+
+	function dw_start_session() {
+		if ( ! session_id() ) {
+			session_start();
+		}
+	}
+
 // Désactiver l'éditeur Gutenberg de Wordpress
 	add_filter( 'use_block_editor_for_post', '__return_false' );
 
@@ -23,6 +32,19 @@
 		'menu_icon'     => 'dashicons-palmtree',
 		'supports'      => [ 'title', 'editor', 'thumbnail' ],
 		'rewrite'       => [ 'slug' => 'voyages' ],
+	] );
+	
+	register_post_type( 'message', [
+		'label'         => 'Message de contact',
+		'description'   => 'Les messages envoyés par les utilisateurs par le formulaire de contact',
+		'public'        => false,
+		'show_ui'       => true,
+		'capabilities'  => array(
+			'create_posts' => false,
+		),
+		'map_meta_cap'  => true,
+		'menu_position' => 6,
+		'menu_icon'     => 'dashicons-buddicons-pm',
 	] );
 
 // Récupérer les trips via une requête wordpress.
@@ -144,7 +166,7 @@
 	function dw_handle_submit_contact_form() {
 		$nonce = $_POST['_wpnonce'];
 
-		if ( ! wp_verify_nonce( $nonce, 'nonce_check_contact_form' ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'nonce_submit_contact' ) ) {
 			die( 'Unauthorized.' );
 		}
 
@@ -185,6 +207,7 @@
 
 		return wp_safe_redirect( $_POST['_wp_http_referer'] . '#contact', 302 );
 	}
+
 
 	function dw_sanitize_contact_form_data() {
 		return [
@@ -241,18 +264,5 @@
 			return '';
 		}
 
-		return '<p>Ce champ ne respecte pas : ' . $_SESSION['contact_form_feedback']['errors'][ $field ] . '</p>';
+		return '<p style="color: red;">Ce champ ne respecte pas : ' . $_SESSION['contact_form_feedback']['errors'][ $field ] . '</p>';
 	}
-
-	register_post_type( 'message', [
-		'label'         => 'Message de contact',
-		'description'   => 'Les messages envoyés par les utilisateurs par le formulaire de contact',
-		'public'        => false,
-		'show_ui'       => true,
-		'capabilities'  => array(
-			'create_posts' => false,
-		),
-		'map_meta_cap'  => true,
-		'menu_position' => 6,
-		'menu_icon'     => 'dashicons-buddicons-pm',
-	] );
