@@ -1,36 +1,48 @@
 <?php
 
-	// Class = recette / Objet = repas de la recette
+class PrimaryMenuWalker extends Walker_Nav_Menu
+{
+    function start_el(&$output, $item, $depth=0, $args=null, $id=0)
+    {
+        $icon = get_field('icon', $item);
+        $containerClasses = [];
 
-	class PrimaryMenuWalker extends Walker_Nav_Menu {
-		function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
-			$icon      = get_field( 'icon', $item );
-			$modifiers = [];
-			if ( $item->current ) {
-				$modifiers[] = 'current';
-			}
-			if ( $item->type === 'custom' ) {
-				$modifiers[] = 'url';
-			}
-			if ( $icon ) {
-				$modifiers[] = $icon;
-			}
-			$output .= '<li class="' . $this->generateBemClasses( 'nav__item', $modifiers ) . '">';
-			$output .= '<a href="' . $item->url . '"'
-			           . ( $item->attr_title ? ' title="' . $item->attr_title . '"' : '' )
-			           . ' class="nav__link">' . $item->title . '</a>';
-		}
+        if($icon) {
+            $containerClasses[] = $icon;
+        }
 
-		function end_el( &$output, $item, $depth = 0, $args = null ) {
-			$output .= '</li>';
-		}
+        if($item->current) {
+            $containerClasses[] = 'current';
+        }
 
-		function generateBemClasses( string $base, array $modifiers = [] ) {
-			$value = $base;
-			foreach ( $modifiers as $modifier ) {
-				$value .= ' ' . $base . '--' . $modifier;
-			}
+        if(in_array('menu-item-type-custom', $item->classes)) {
+            $containerClasses[] = 'custom';
+        }
 
-			return $value;
-		}
-	}
+        if($depth) {
+            $containerClasses[] = 'subitem';
+        }
+
+        $output .= '<li class="' . $this->generateBemClasses('nav__item', $containerClasses) . '">';
+
+        $output .= '<a href="' . $item->url . '" class="nav__link"' 
+            . ($item->attr_title ? ' title="' . $item->attr_title . '"' : '')
+            . '>' . $item->title . '</a>';
+    }
+
+    function end_el(&$output, $item, $depth=0, $args=null)
+    {
+        $output .= '</li>';
+    }
+
+    function generateBemClasses($base, array $modifiers = [])
+    {
+        $value = $base;
+
+        foreach ($modifiers as $modifier) {
+            $value .= ' ' . $base . '--' . $modifier;
+        }
+
+        return $value;
+    }
+}
