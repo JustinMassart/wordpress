@@ -24,7 +24,7 @@ class ContactFormController extends BaseFormController
         return [
             'firstname' => [RequiredValidator::class],
             'lastname' => [RequiredValidator::class],
-            'email' => [RequiredValidator::class, EmailValidator::class],
+            'email' => [EmailValidator::class, RequiredValidator::class],
             'message' => [RequiredValidator::class],
             'rules' => [AcceptedValidator::class],
         ];
