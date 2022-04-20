@@ -154,3 +154,30 @@
 
 		return '<p>Ce champ ne respecte pas : ' . $_SESSION['contact_form_feedback']['errors'][ $field ] . '</p>';
 	}
+
+	// utilitaire pour charger un fichier compilé par mix, avec cache bursting
+
+	function dw_mix( $path ) {
+		$path = '/' . ltrim( $path, '/' );
+
+		// Checker si le fichier demandé existe bien, sinon retourner NULL
+		if ( ! realpath( __DIR__ . '/public' . $path ) ) {
+			return;
+		}
+
+		// Check si le fichier mix-manifest existe bien, sinon retourner le fichier sans cache-bursting
+		if ( ! ( $manifest = realpath( __DIR__ . '/public/mix-manifest.json' ) ) ) {
+			return get_stylesheet_directory_uri() . '/public' . $path;
+		}
+
+		// Ouvrir le fichier mix-manifest et lire le JSON
+		$manifest = json_decode( file_get_contents( $manifest ), true );
+
+		// Check si le fichier demandé est bien présent dans le mix manifest, sinon retourner le fichier sans cache-bursting
+		if ( ! array_key_exists( $path, $manifest ) ) {
+			return get_stylesheet_directory_uri() . '/public' . $path;
+		}
+
+		// C'est OK, on génère l'URL vers la ressource sur base du nom de fichier avec cache-bursting.
+		return get_stylesheet_directory_uri() . '/public' . $manifest[ $path ];
+	}
