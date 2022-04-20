@@ -7,7 +7,34 @@
   \*****************************************************/
 /***/ (() => {
 
-console.log('Testing');
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var DW_controller = /*#__PURE__*/function () {
+  function DW_controller() {
+    _classCallCheck(this, DW_controller);
+
+    console.log('Ça construit - constructor'); // Ici, le DOM n'est pas encore prêt
+    // Pour le moment, rien à faire.
+  }
+
+  _createClass(DW_controller, [{
+    key: "run",
+    value: function run() {
+      console.log('Ça cours - run'); // Ici, le DOM est prêt.
+    }
+  }]);
+
+  return DW_controller;
+}();
+
+window.dw = new DW_controller();
+window.addEventListener('load', function () {
+  return window.dw.run();
+});
 
 /***/ }),
 
