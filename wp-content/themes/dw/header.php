@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="<?= dw_mix('css/style.css') ?>">
-        <script type="text/javascript" src="<?= dw_mix('js/script.js') ?>"></script>
+        <link rel="stylesheet" type="text/css" href="<?= dw_mix( 'css/style.css' ) ?>">
+        <script type="text/javascript" src="<?= dw_mix( 'js/script.js' ) ?>"></script>
         <title>Document</title>
     </head>
     <body>
@@ -49,4 +49,13 @@
 					<?php endforeach; ?>
                 </ul>
             </nav>
+			<?php /*get_search_form(); */ ?>
+            <form method="GET" action="<?= get_home_url(); ?>" class="header__search search" role="search">
+                <div class="search__container">
+                    <label for="header_search" class="search__label">Votre recherche</label>
+                    <input type="text" name="s" id="header_search" class="search__input"
+                           value="<?= get_search_query(); ?>">
+                    <button class="search__btn" type="submit">Rechercher</button>
+                </div>
+            </form>
         </header>

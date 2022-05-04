@@ -1,28 +1,24 @@
 <?php get_header(); ?>
-
     <main class="layout">
-        <section class="layout__latest latest">
-            <h2 class="latest__title">Mes derniers articles</h2>
-            <div class="latest__container">
+        <section class="results">
+            <h2 class="results__title">Les articles correspondants à votre recherche</h2>
+            <div class="results__container">
 				<?php if ( have_posts() ): while ( have_posts() ): the_post(); ?>
-					<?php dw_include( 'post', ['modifier' => 'index'] ); ?>
+					<?php dw_include( 'post', ['modifier' => 'search'] ); ?>
 				<?php endwhile; else: ?>
                     <!-- Il n'y a pas d'articles à afficher -->
                     <p class="results__empty">Il n’y a pas de résultats pour votre recherche</p>
-				<?php endif; ?>
-            </div>
+				<?php endif; ?>            </div>
         </section>
-
-        <section class="layout__trips trips">
-            <h2 class="trips__title">Mes derniers voyages</h2>
-            <div class="trips__container">
+        <section class="results">
+            <h2 class="results__title">Les récits de voyage correspondants à votre recherche</h2>
+            <div class="results__container">
 				<?php if ( ( $trips = dw_get_trips( 3, get_search_query() ) )->have_posts() ): while ( $trips->have_posts() ): $trips->the_post(); ?>
-					<?php dw_include( 'trip', ['modifier' => 'index'] ); ?>
+					<?php dw_include( 'trip', ['modifier' => 'search'] ); ?>
 				<?php endwhile; else: ?>
                     <p class="trips__empty">Il n'y a pas de voyages à vous raconter...</p>
 				<?php endif; ?>
             </div>
         </section>
     </main>
-
 <?php get_footer(); ?>

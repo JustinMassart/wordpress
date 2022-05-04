@@ -12,6 +12,7 @@
 	require_once( __DIR__ . '/Forms/Validators/RequiredValidator.php' );
 	require_once( __DIR__ . '/Forms/Validators/EmailValidator.php' );
 	require_once( __DIR__ . '/Forms/Validators/AcceptedValidator.php' );
+	require_once( __DIR__ . '/Forms/DW_Custom_search_query.php' );
 
 // Lancer la sessions PHP pour pouvoir passer des variables de page en page
 	add_action( 'init', 'dw_start_session', 1 );
@@ -65,13 +66,14 @@
 	] );
 
 // Récupérer les trips via une requête Wordpress
-	function dw_get_trips( $count = 20 ) {
+	function dw_get_trips( $count = 20, $search = null ) {
 		// 1. on instancie l'objet WP_Query
-		$trips = new WP_Query( [
+		$trips = new DW_Custom_search_query( [
 			'post_type'      => 'trip',
 			'orderby'        => 'date',
 			'order'          => 'DESC',
 			'posts_per_page' => $count,
+			's'              => strlen( $search ) ? $search : null,
 		] );
 
 		// 2. on retourne l'objet WP_Query
@@ -180,4 +182,28 @@
 
 		// C'est OK, on génère l'URL vers la ressource sur base du nom de fichier avec cache-bursting.
 		return get_stylesheet_directory_uri() . '/public' . $manifest[ $path ];
+	}
+
+	// Se plugger dans l'execution de la requête de recherche pour la contraindre à chercher dans les articles uniquement
+
+	function dw_configure_search_query( $query ) {
+
+		if ( $query->is_search && ! is_admin() && ! is_a( $query, DW_Custom_search_query::class ) ) {
+			$query->set( 'post_type', 'post' );
+		}
+
+		return $query;
+
+	}
+
+	add_filter( 'pre_get_posts', 'dw_configure_search_query' );
+
+	// Fonction permettant d'inclure des composants avec leur propre variables locales
+
+	function dw_include( string $partials, array $variables = [] ) {
+
+		extract( $variables );
+
+		include( __DIR__ . '/partials/' . $partials . '.php' );
+
 	}
