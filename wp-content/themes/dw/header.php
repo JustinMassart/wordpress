@@ -4,8 +4,12 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="<?= dw_mix( 'css/style.css' ) ?>">
+		<?php /*foreach ( pll_the_languages( [ 'raw' => true ] ) as $code => $locale ): */?><!--
+            <link rel="alternate" href="<?/*= $locale['url'] */?>" hreflang="<?/*= $locale['locale'] */?>">
+		--><?php /*endforeach; */?>
         <script type="text/javascript" src="<?= dw_mix( 'js/script.js' ) ?>"></script>
         <title>TODO</title>
+        <?php wp_head(); ?>
     </head>
     <body>
         <header class="header">
