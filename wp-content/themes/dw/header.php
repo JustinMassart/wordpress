@@ -14,6 +14,14 @@
 
             <nav class="header__nav nav">
                 <h2 class="nav__title"><?= __( 'Navigation principale', 'dw' ); ?></h2>
+                <div class="nav__lang">
+                    <ul class="nav__lang__list">
+						<?php foreach ( pll_the_languages( [ 'raw' => true ] ) as $code => $locale ): ?>
+                            <a href="<?= $locale['url'] ?>" title="<?= $locale['name'] ?>"
+                               lang="<?= $locale['locale'] ?>" hreflang="<?= $locale['locale'] ?>"><?= $code ?></a>
+						<?php endforeach; ?>
+                    </ul>
+                </div>
 				<?php // wp_nav_menu([
 					//     'menu' => 'primary',
 					//     'container_class' => 'nav__container',
