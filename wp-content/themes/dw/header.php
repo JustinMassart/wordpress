@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="<?= dw_mix( 'css/style.css' ) ?>">
         <script type="text/javascript" src="<?= dw_mix( 'js/script.js' ) ?>"></script>
-        <title>Document</title>
+        <title>TODO</title>
     </head>
     <body>
         <header class="header">
@@ -13,7 +13,7 @@
             <p class="header__tagline"><?= get_bloginfo( 'description' ); ?></p>
 
             <nav class="header__nav nav">
-                <h2 class="nav__title">Navigation principale</h2>
+                <h2 class="nav__title"><?= __( 'Navigation principale', 'dw' ); ?></h2>
 				<?php // wp_nav_menu([
 					//     'menu' => 'primary',
 					//     'container_class' => 'nav__container',
@@ -52,10 +52,10 @@
 			<?php /*get_search_form(); */ ?>
             <form method="GET" action="<?= get_home_url(); ?>" class="header__search search" role="search">
                 <div class="search__container">
-                    <label for="header_search" class="search__label">Votre recherche</label>
+                    <label for="header_search" class="search__label"><?= __( 'Votre recherche', 'dw' ); ?></label>
                     <input type="text" name="s" id="header_search" class="search__input"
                            value="<?= get_search_query(); ?>">
-                    <button class="search__btn" type="submit">Rechercher</button>
+                    <button class="search__btn" type="submit"><?= __( 'Rechercher', 'dw' ); ?></button>
                 </div>
             </form>
         </header>

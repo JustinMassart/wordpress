@@ -1,0 +1,136 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Projet de Test DW V1\n"
+"POT-Creation-Date: 2022-05-04 14:49+0200\n"
+"PO-Revision-Date: 2022-05-04 14:53+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl_BE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: Forms/Validators/AcceptedValidator.php:9
+msgid "Veuillez cocher la case ci-dessus pour continuer."
+msgstr "Veuillez cocher la case ci-dessus pour continuer."
+
+#: Forms/Validators/EmailValidator.php:6
+msgid "Merci de fournir une adresse mail valide."
+msgstr "Merci de fournir une adresse mail valide."
+
+#: Forms/Validators/RequiredValidator.php:6
+msgid "Ce champ ne peut pas être vide."
+msgstr "Ce champ ne peut pas être vide."
+
+#: footer.php:3
+msgid "Pied de page"
+msgstr "Footie"
+
+#: header.php:16
+msgid "Navigation principale"
+msgstr "Navigation principale"
+
+#: header.php:55
+msgid "Votre recherche"
+msgstr "U zoek opdracht"
+
+#: header.php:58
+msgid "Rechercher"
+msgstr "Zoeken"
+
+#: index.php:5
+msgid "Mes derniers articles"
+msgstr "Mes derniers articles"
+
+#: index.php:11 search.php:10
+msgid "Il n’y a pas de résultats pour votre recherche"
+msgstr "Il n’y a pas de résultats pour votre recherche"
+
+#: index.php:17
+msgid "Mes derniers voyages"
+msgstr "Mes derniers voyages"
+
+#: index.php:22 search.php:19
+msgid "Il n’y a pas de voyages à vous raconter..."
+msgstr "Il n’y a pas de voyages à vous raconter..."
+
+#: partials/post.php:3
+msgid "Lire l'article \":title\""
+msgstr "Lire l'article \":title\""
+
+#: partials/post.php:13
+msgid "Publié par :author le :date"
+msgstr "Publié par :author le :date"
+
+#: partials/trip.php:3
+msgid "Lire le récit de voyage \":title\""
+msgstr "Lire le récit de voyage \":title\""
+
+#: search.php:4
+msgid "Les articles correspondants à votre recherche"
+msgstr "Les articles correspondants à votre recherche"
+
+#: search.php:14
+msgid "Les récits de voyage correspondants à votre recherche"
+msgstr "Les récits de voyage correspondants à votre recherche"
+
+#: single-trip.php:12
+msgid "Détails du voyage"
+msgstr "Détails du voyage"
+
+#: single-trip.php:14
+msgid "Date de départ"
+msgstr "Date de départ"
+
+#: single-trip.php:19
+msgid "Date de retour"
+msgstr "Date de retour"
+
+#: single-trip.php:25
+msgid "Aucune date de retour de prévue pour le moment."
+msgstr "Aucune date de retour de prévue pour le moment."
+
+#: template-contact.php:13
+msgid "Oups ! Il y a des erreurs dans le formulaire"
+msgstr "Oups ! Il y a des erreurs dans le formulaire"
+
+#: template-contact.php:16
+msgid "Votre prénom"
+msgstr "Votre prénom"
+
+#: template-contact.php:22
+msgid "Votre nom"
+msgstr "Votre nom"
+
+#: template-contact.php:28
+msgid "Votre mail"
+msgstr "Votre mail"
+
+#: template-contact.php:34
+msgid "Votre numéro de téléphone"
+msgstr "Votre numéro de téléphone"
+
+#: template-contact.php:40
+msgid "Votre message"
+msgstr "Votre message"
+
+#: template-contact.php:48
+msgid "conditions générales d'utilisation"
+msgstr "conditions générales d'utilisation"
+
+#: template-contact.php:48
+msgid "J'accepte les :conditions"
+msgstr "J'accepte les :conditions"
+
+#: template-contact.php:55
+msgid "Envoyer"
+msgstr "Envoyer"
+
+#: template-contact.php:59
+msgid "Merci ! Votre message a bien été envoyé."
+msgstr "Merci ! Votre message a bien été envoyé."
